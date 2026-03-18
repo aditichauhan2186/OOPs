@@ -1,0 +1,157 @@
+#4 PILLARS OF OOPs
+
+1.)ENCAPSULATION:
+wraping up data members and functions
+class banane ka dusra naam
+
+Fully encapsulated class- all data members are private
+
+
+WHY ??
+Advantages:
+ENCAPSULATION is information hiding /data hiding --> security increases
+If we want we can make class read only using ENCAPSULATION
+Code reusability
+Unit testing and manamagebility increases
+
+
+
+
+2.)INHERITANCE:
+See Inheritance.cpp
+human->parent/super class
+male/female->child/sub class
+
+
+Super Class             Sub Class           Final
+Public                  Public              Public
+Public                  Private             Private
+Public                  Protected           Protected
+Protected               Public              Protected
+Protected               Protected           Protected
+Protected               Private             Private
+Private                 Public              Not Accessible
+Private                 Protected           Not Accessible
+Private                 Private             Not Accessible
+
+
+Protected: It is somewhat similar to Private
+           Only child class can access the protected data members
+
+
+Types of Inheritance:
+
+1.) Single
+2.) Multi Level
+3.) Multiple
+4.) Hybrid
+5.) Heirarchial 
+
+1.)Single Level : A->B (B inherits A)
+2.)Multi Level : A->B->C->D....
+3.)Multiple : A->C B->C   (synatx - class className : mode parentClass1,mode parentClass2)
+4.)Heirarchial: Family tree ki tarah 
+5.)Hybird : Combination of more than one typr of Inheritance
+
+
+#Inheritance Ambiguity :
+say C inherits both A and B 
+And both A and B have a func named foo()
+so use scope resolution operator ::
+
+obj.A::foo()
+
+
+
+
+
+
+3.)POLYMORPHISM:
+ many forms 
+ Two types of POLYMORPHISM:
+ 1.)Compile type POLYMORPHISM
+ 2.)Run time POLYMORPHISM
+
+
+ 1.)Compile type POLYMORPHISM / STATIC POLYMORPHISM:
+ a.)Function overloading
+ b.)operator overloading
+
+ a.)Function overloading
+ If you're changing the input parameters - you can create two functions with same name 
+ If you're only changing return type - you can't
+
+ b.)operator overloading
+    Eg + ->adds 
+         -> concatenates 
+    Add a third opertaion to it : to print "Hello World"
+
+    NOTE-> (::) , (.) ,(.*) ,(?:),sizeof cannot be overloaded
+
+
+    Syntax of operator overload:
+    return_type operator symbol_of_operator (i/p argument){
+
+    }
+
+    a+b 
+    a= "this" waala object
+    b= i/p argument
+
+    #using + for subtraction 
+
+    void operator+ (className &A){
+        int value1=this->data_mem;
+        int value2=A.data_mem;
+        cout<<value1-value2<<"\n";
+        return;
+    }
+
+
+
+ 2.)Run time POLYMORPHISM /DYNAMIC POLYMORPHISM:
+ EG: 
+ Animal{
+    void speak(){
+        return speaking
+    }
+ }
+ Dog : Public Animal{
+    void speak(){
+        return barking;
+    }
+ }
+
+ basically sub class and super class have the same Function name and same function parameters as well
+
+ Dog waala chalega
+
+
+Continued in concepts_3.txt
+
+
+
+ 4.)ABSTRACTION:
+
+ "Implementation hiding"
+
+ in classes: private,public etc
+
+ Advantages: only you can change the Code, nobody else can 
+            Security inc 
+
+
+#difference between ABSTRACTION and ENCAPSULATION
+
+Every function is an encapsulation; in pseudocode:
+
+point x = { 1, 4 }
+point y = { 23, 42 }
+
+numeric d = distance(x, y)
+Here, distance encapsulates the calculation of the (Euclidean) distance between two points in a plane: it hides implementation details. This is encapsulation, pure and simple.
+
+Abstraction is the process of generalisation: taking a concrete implementation and making it applicable to different, albeit somewhat related, types of data. The classical example of abstraction is C’s qsort function to sort data:
+
+The thing about qsort is that it doesn't care about the data it sorts — in fact, it doesn’t know what data it sorts. Rather, its input type is a typeless pointer (void*) which is just C’s way of saying “I don't care about the type of data” (this is also called type erasure). The important point is that the implementation of qsort always stays the same, regardless of data type. The only thing that has to change is the compare function, which differs from data type to data type. qsort therefore expects the user to provide said compare function as a function argument.
+

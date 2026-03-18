@@ -1,0 +1,333 @@
+Run time POLYMORPHISM- virtual functions
+
+Let's first understand: Pointers to Derived Classes:
+
+class base{
+    public : int x;
+    void display(){
+        cout<<"You're in base class and the value of x is "<<x<<"\n";
+    }
+}
+class derived : Public base{
+    public : 
+    int y; 
+    void display(){
+        void display(){
+        cout<<"You're in derived class and the value of x is "<<x<<" and the value of y is "<<y<<"\n";
+    }
+    }
+}
+
+int main(){
+    base *base_class_pointer;
+    base obj_base;
+    derived obj_derived;
+    base_class_pointer=&obj_derived
+    obj_base.x=1;
+    obj_derived.x=2;
+    obj_derived.y=2;
+    base_class_pointer->display();
+}
+
+
+So in this code i've tried to give the address of derived class to a pointer which was of base type
+This is a valid thing in c++;
+
+OUTPUT : You're in base class and the value of x is 2
+
+Toh ek base class ka pointer always points to base class only chahe tum usse derived class par point kara do
+
+
+
+
+##VIRTUAL FUNCTION: Iss ka matlab hai ki we want to achieve run time POLYMORPHISM
+
+Ab we want that if a base class pointer points to a derived class object, the derived class object's function should be used, this is done with help of virtual function
+
+kuchh ni krna bas base class k display function k aage virtual likh do :)
+
+class base{
+    public : int x;
+    virtual void display(){
+        cout<<"You're in base class and the value of x is "<<x<<"\n";
+    }
+}
+class derived : Public base{
+    public : 
+    int y; 
+    void display(){
+        void display(){
+        cout<<"You're in derived class and the value of x is "<<x<<" and the value of y is "<<y<<"\n";
+    }
+    }
+}
+
+
+virtual keyword helps to run functions of the derived class
+
+#NOTE : If a class has any virtual functions, its destructor should also be declared virtual.
+
+#very important : Virtual destructors 
+If your base class has a virtual function then you customly have to write a virtual destructor,too
+Kyunki The pointer will be of base class and the default destructor will only delete things of base class 
+To delete the derived class elements -
+    virtual ~Base() {}
+OTHERWISE : There can be memory leaks
+
+
+NOTE: Run time POLYMORPHISM : late binding
+      Compile Time POLYMORPHISM : early binding
+
+
+
+
+
+
+A Good example:
+
+
+#include <iostream>
+using namespace std;
+
+class Employee
+{
+  public:
+    virtual void raiseSalary()
+    {
+        cout << "Employee salary raised (general)" << endl;
+    }
+
+    virtual void promote()
+    {
+        cout << "Employee promoted (general)" << endl;
+    }
+
+    // virtual destructor
+    virtual ~Employee()
+    {
+    }
+};
+
+// Derived class: Manager
+class Manager : public Employee
+{
+  public:
+    void raiseSalary() override
+    {
+        cout << "Manager salary raised with incentives" << endl;
+    }
+
+    void promote() override
+    {
+        cout << "Manager promoted to Senior Manager" << endl;
+    }
+};
+
+// Derived class: Engineer
+class Engineer : public Employee
+{
+  public:
+    void raiseSalary() override
+    {
+        cout << "Engineer salary raised with bonus" << endl;
+    }
+
+    void promote() override
+    {
+        cout << "Engineer promoted to Senior Engineer" << endl;
+    }
+};
+
+int main()
+{
+
+    // Create different employees
+    Manager m;
+    Engineer e;
+
+    // Array of base class pointers
+    Employee *employees[2] = {&m, &e};
+
+    // Raise salary for all employees
+    cout << "--- Raising Salaries ---" << endl;
+    for (int i = 0; i < 2; i++)
+    {
+        employees[i]->raiseSalary();
+    }
+
+    // Promote all employees
+    cout << "\n--- Promotions ---" << endl;
+    for (int i = 0; i < 2; i++)
+    {
+        employees[i]->promote();
+    }
+
+    return 0;
+}
+
+
+
+Output
+--- Raising Salaries ---
+Manager salary raised with incentives
+Engineer salary raised with bonus
+
+--- Promotions ---
+Manager promoted to Senior Manager
+Engineer promoted to Senior Engineer
+
+
+
+
+##OBJECT SLICING:
+
+What if  instead of assigning a bas_class_pointer = &derived_class_object
+I do
+base_class_object=derived_class_object
+will i still be able to use derived class functions declared as virtual in base class ?
+
+No — in that case you will NOT get polymorphic behavior. What you’re describing leads to something called object slicing.
+
+
+Even if your display function is virtual, the object you have made is in itself a base class obj , toh ye toh hona hi tha
+
+We can avoid the above-unexpected behavior with the use of pointers or references. Object slicing doesn't occur when pointers or references to objects are passed as function arguments since a pointer or reference of any type takes the same amount of memory. 
+
+
+if :
+
+class Base {
+protected:
+    int i;
+
+public:
+    Base(int a) { i = a; }
+    virtual void display() 
+    {
+        cout << "I am Base class object, i = " << i << endl;
+    }
+};
+
+class Derived : public Base {
+    int j;
+
+public:
+    Derived(int a, int b)
+        : Base(a)
+    {
+        j = b;
+    }
+    virtual void display()
+    {
+        cout << "I am Derived class object, i = " << i
+             << ", j = " << j << endl;
+    }
+};
+
+void somefunc(Base obj) { obj.display(); }
+int main()
+{
+    Base b(33);
+    Derived d(45, 54);
+    somefunc(b);
+    somefunc(d);
+    return 0;
+}
+
+O/P:
+I am Base class object, i = 33
+I am Base class object, i = 45
+
+
+void somefunc (Base &obj)
+{
+    obj.display();
+}           
+Output
+
+I am Base class object, i = 33
+I am Derived class object, i = 45, j = 54
+
+
+
+
+##FRIEND FUNCTIONS:
+Let us say i had a class named Complex:
+class Complex{
+    int real,imag;
+    friend Complex addComplex(Complex &o1, Complex &o2)
+    public:
+    void set_data(){
+
+    }
+}
+
+And you create a function outside the class that wants to access private members
+
+Complex addComplex(Complex &o1, Complex &o2){
+    Complex o3;
+    o3.real=o1.real+o2.real;
+    o3.imag=o1.imag+o2.imag;
+}
+
+
+It will show error w/o the friend function
+
+
+#FRIEND Class
+
+// friend class declaration
+    friend class GFG;
+
+
+Member Function of Another Class as Friend Function: Here Forward declaration of the base class(or any other class whose Friend we want to make this class)
+Also in this class, only do the declaration of the friend function
+Define it later after the base class
+
+
+#include <iostream>
+using namespace std;
+
+// Forward Declaration needed
+class base;
+
+
+class GFG {
+public:
+    void GFG_Function(base& obj);
+};
+
+
+class base {
+private:
+    int private_variable;
+
+protected:
+    int protected_variable;
+
+public:
+    base() {
+        private_variable = 10;
+        protected_variable = 99;
+    }
+
+
+    friend void GFG::GFG_Function(base&);
+};
+
+
+void GFG::GFG_Function(base& obj) {
+    cout << "Private Variable: " << 
+             obj.private_variable
+         << endl;
+    cout << "Protected Variable: " << 
+             obj.protected_variable;
+}
+
+int main() {
+    base object1;
+    GFG object2;
+    object2.GFG_Function(object1);
+
+    return 0;
+}

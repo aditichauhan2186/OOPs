@@ -1,0 +1,213 @@
+OOPs is a programming paradigm (a programming style) which revolves around object
+Object - has 1. State/Properties
+             2. Behaviour 
+
+Eg : A Hero in a game 
+    Properties : Name,Health,Level
+    Behaviour : Attack(),Dance()
+
+
+
+Class - User defined data type
+        Eg: Hero Ramesh;
+
+"Object is an instance of class"
+
+IMPORTANT! An empty class has a size of 1 (for identification)
+
+Access modifiers : 
+        private: By default; Only inside Class
+        public : Both inside & outside Class
+        protected: 
+
+Getter/Setter: Mainly used for private members
+
+Padding:
+Basically kisi bhi structure mei jo bhi largest size ka data type hai uske multiples par hi next start hoga
+for eg : int char char
+so 4+1+1=6
+but assign memory of 8
+
+Greedy alignment :
+understand two different scenarios:
+
+Case 1: char int char 
+largest size-4
+so this whole block starts with address that is multiple of 4
+
+1000   1001    1002   1003   1004    1005    1006   1007    1008    1009    1010    1011    1012
+char   pad     pad    pad    int                            char    pad     pad     pad     next 
+
+memory of 12 bytes
+
+
+Case 2:
+int char char
+1000   1001    1002   1003  1004    1005     1006   1007
+int                         char    char     pad    pad
+
+memory of 8 bytes
+
+#this is greedy alignment 
+
+
+##BTS :
+
+Hero h1;
+
+what happens bts ?
+Basically, the object h1 is created using a constructor 
+
+Constructor: Invoked at the time of object creation
+             Has NO RETURN TYPE (not even void)
+             No input parameter
+
+Whenever we write Hero h1, the function h1.Hero(); is being called 
+Though, we have not defined it yet (default constructor)
+
+Can also make one on our own, but then the default one disappears
+
+
+We can also make our own copy constructor
+
+Hero(Hero &temp){
+        this->health=temp->health+1;
+}
+IMPORTANT! if you didn't use & here then an infinite loop would work 
+As it would be passed by value
+
+
+
+#Shallow and Deep copy :
+
+default copy comparator-> does Shallow copy
+
+In Shallow copy, lets say you had the pointer to an array as the first element
+So when you copy h1 in h3 , the address of array gets copied
+So its not possible to change only h1 and h3 because changes are happening in memory itself
+
+
+For Deep copying 
+Make an entirely new array using
+char *ch=new char[50];
+
+
+Destructor : when objects become out of scope, then Destructor is called
+
+        Name : same as class Name
+        No return type
+        No parameters
+
+How do we know the difference b/w constructor and Destructor? 
+Sign of ~
+~Hero(){
+        //this is how u declare a Destructor function
+}
+
+Note that Destructor is automatically  called only for objects that are created statically
+For dynamically allocated objects, call Destructor manually 
+
+
+const is used to declare something constant (read-only). Once a value is declared const,
+ it cannot be modified after initialization. It helps make programs safer and prevents accidental changes.
+
+
+
+ A const variable must be initialized when declared and cannot change later.
+
+A CONST MEMBER FUNCTION promises not to modify the object’s data members. Matlab ki wo function ko agar call bhi karoge so it will not change any of your data members like health,level etc.
+Basically:
+You cannot modify data members
+You cannot call non-const functions(bc they have tendency to change data members value)
+
+CONST OBJECT:
+You cannot change any data members of a const object
+You cannot call any non const function (bc they have tendency to change data members value)
+
+
+CONST DATA MEMBER: a data member which cannot be changed after initialization
+
+
+CONST WITH FUNCTION PARAMETERS:
+Basically these parameter's value cannot be changed inside the function
+
+CONST WITH POINTERS:
+
+1.) Pointer to const data
+(const int* p)
+basically point to const of some datatype
+you cannot change value of data type using pointer
+
+2.) Const pointer
+(int *const p)
+basically pointer jis address ko point kar raha that cannot be changed
+but you can change the value @ that address
+
+3.) const pointer to const data
+const int * const p;
+
+
+
+Now the question arrises that atleast once you would like to initialise the const values as well ... how do we do that??
+
+#INITIALISATION LIST
+
+const variables must be initialised, not assigned
+
+In C++ OOP, a constructor initialization list is a way to initialize class data members before the constructor body executes. It is written after the constructor name and before the constructor body.
+
+General Syntax:
+Constructor(parameters) : member1(value1), member2(value2)
+{
+    // constructor body
+}
+
+Eg: Circle() : pi(3.14) { }
+
+1.) For const variables(explained above)
+2.) For reference in classes
+3.)For Base Class Constructors (Inheritance)
+4.)For Member Objects
+
+
+2.)-> In C++ int &x; gives an error
+        you have to assign a value to reference variable
+        Similarly, this is done in classes
+
+        Eg:
+        class Test {
+        int &ref;
+
+        public:
+        Test(int &x) : ref(x) { }
+        };
+
+
+Important rule:
+Members are initialized in the order they are declared in the class, NOT in the order of the initialization list.
+
+
+
+
+#Static Keyword:
+This is a data member in class to access which you do not need to make an object
+It just belongs to the class
+
+How to initialise:
+datatype classname :: feildName = value;
+eg:
+static int timeToComplete
+
+int Hero :: timeToComplete = 60;
+
+
+:: is the scope resolution operator
+class ki cheez ko access krne k liye hai
+
+how to cout in main?
+cout<<Hero::timeToComplete;
+
+
+Static functions : No need to create objects for calling these functions,too
+It does not have this keyword(bc this keyword is pointer to current object, but we have no object here ;)
+Very obviously these static functions can only access static data members
