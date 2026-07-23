@@ -76,7 +76,7 @@ Hero(Hero &temp){
 IMPORTANT! if you didn't use & here then an infinite loop would work 
 As it would be passed by value
 
-
+drop the & and you're passing by value — which itself triggers a copy — which triggers a copy — infinite loop, engine crashes.
 
 #Shallow and Deep copy :
 
